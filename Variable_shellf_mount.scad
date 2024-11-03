@@ -78,7 +78,7 @@ Slider_nut_size = 6; // [2:0.25:40]
 Use_custom_shelf_screw = false;
 
 // Spacing of shelf screws, center-to-center
-Shelf_screws_spacing = 7; // [2:0.1:100]
+Shelf_screws_spacing = 23; // [2:0.1:100]
 
 // Type of a screw used for mounting the shelf (ignored if custom is selected)
 Shelf_screw = 3; // [3:M3, 4:M4, 5:M5, 6:M6, 7:M7, 8:M8, 9:M9, 10:M10]
@@ -136,6 +136,8 @@ $fs = $preview ? 1 : Minimum_size;
 wall_mount_screw_size = Use_custom_wall_mount_screw ? Custom_wall_mount_screw : Wall_mount_screw;
 slider_screw_size = Use_custom_slider_screw ? Custom_slider_screw : Slider_screw;
 shelf_screw_size = Use_custom_shelf_screw ? Custom_shelf_screw : Shelf_screw;
+slider_width = Shelf_screws_spacing + Shelf_height;
+slider_thickness = 10;
 
 // Functions
 function isCountersink(type) = type == "countersink";
@@ -156,30 +158,25 @@ module screw(length, type, minor, major, height, angle, with_tolerances=true) {
     }
 }
 
-module slider(with_tolerances=false) {
-    cube([25, 5, 10], center = true);
+module shelfScrew(with_tolerances=true) {
+    screw(slider_thickness, Shelf_screw_head_hole, Shelf_screw, Shelf_screw_head_major, Shelf_screw_head_height, Shelf_screw_head_angle, with_tolerances);
 }
 
 // Sliding part
 if (Render_shelf_mount) {
-    translate([-50, 0, 0]) {
-        slider(true);
+    difference() {
+        union() {
+            cube([slider_width, Shelf_height, slider_thickness], center = true);
+        }
+        translate([Shelf_screws_spacing / 2, 0, 0]) shelfScrew();
+        translate([-Shelf_screws_spacing / 2, 0, 0]) shelfScrew();
+    }
+    if ($preview) {
+        translate([Shelf_screws_spacing / 2, 0, 0]) #shelfScrew(false);
+        translate([-Shelf_screws_spacing / 2, 0, 0]) #shelfScrew(false);
     }
 }
 
 // Wall mount
 if (Render_wall_mount) {
-    let (screw_spacing = 20) {
-        translate([50, 0, 0]) {
-            difference() {
-                slider();
-                translate([screw_spacing / 2, 0, 0]) screw(10, "countersink", 3, 5, 5, 90);
-                translate([-screw_spacing / 2, 0, 0]) screw(10, "countersink", 3, 5, 5, 90);
-            }
-            if ($preview) {
-                translate([screw_spacing / 2, 0, 0]) #screw(10, "countersink", 3, 5, 5, 90, false);
-                translate([-screw_spacing / 2, 0, 0]) #screw(10, "countersink", 3, 5, 5, 90, false);
-            }
-        }
-    }
 }
