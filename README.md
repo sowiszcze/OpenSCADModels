@@ -27,10 +27,10 @@ wish to leave all the default settings, the resulting BOM per model is:
 
 | Name                    | Amount |
 | ----------------------- | -----: |
-| M3×40 counterbore screw |      2 |
-| M3×25 hex screw         |      2 |
-| M3×15 hex screw         |      3 |
-| M3 nut                  |      5 |
+| M4×40 countersink screw |      3 |
+| M4×55 counterbore screw |      2 |
+| M3×15 counterbore screw |      4 |
+| M4 square nut           |      2 |
 
-The BOM for a single instance of the printed model is printed at the end of
-rendering.
+Suggested lengths for screws to use with the model are printed to the console
+at the end of rendering process.

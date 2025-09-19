@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # OpenSCAD customizer values presets
 ./*.json
+
+# Exported models
+**/**.stl
